@@ -35,16 +35,19 @@ Track your progress through each stage. You can complete these over multiple ses
 
 ---
 
-### Stage 2: Git Setup ✅
+### Stage 2: Git Setup ✅ (Re-verified)
 - [x] Initialize git repository
 - [x] Create initial commit with Vite boilerplate
 - [x] Understand git concepts (repository, commits, staging)
+- [x] Successfully moved repository to base directory
+- [x] Maintained complete Git history during refactor
 
 **What you learned:**
 - Why version control is essential
 - Basic git workflow (add, commit)
 - What .gitignore does
 - Git identity configuration
+- How to safely refactor project structure while preserving Git history
 
 **Current Status:** ✅ COMPLETED
 
