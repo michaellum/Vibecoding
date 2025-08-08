@@ -10,6 +10,16 @@ Track your progress through each stage. You can complete these over multiple ses
 
 ## Setup Stages
 
+### Refactor: Move to Base Directory ✅
+- [x] Moved all project files to `/Users/michael.lum/Vibecoding/`
+- [x] Maintained Git history and project structure
+- [x] Verified development server works from new location
+- [x] Committed refactoring changes
+
+**Current project location:** `/Users/michael.lum/Vibecoding/`
+
+---
+
 ### Stage 1: Basic Vite Setup ✅
 - [x] Created Vite React TypeScript project
 - [x] Installed dependencies
