@@ -25,17 +25,18 @@ Track your progress through each stage. You can complete these over multiple ses
 
 ---
 
-### Stage 2: Git Setup ⏸️
-- [ ] Initialize git repository
-- [ ] Create initial commit with Vite boilerplate
-- [ ] Understand git concepts (repository, commits, staging)
+### Stage 2: Git Setup ✅
+- [x] Initialize git repository
+- [x] Create initial commit with Vite boilerplate
+- [x] Understand git concepts (repository, commits, staging)
 
-**What you'll learn:**
+**What you learned:**
 - Why version control is essential
 - Basic git workflow (add, commit)
 - What .gitignore does
+- Git identity configuration
 
-**Current Status:** ⏸️ NOT STARTED
+**Current Status:** ✅ COMPLETED
 
 ---
 
