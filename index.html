@@ -65,6 +65,8 @@
         height: auto;
         cursor: ns-resize;
         z-index: 4;
+        touch-action: none; /* Prevent default touch behaviors */
+        user-select: none; /* Prevent text selection */
       }
       
       .draggable-line img {
@@ -77,22 +79,21 @@
       document.addEventListener('DOMContentLoaded', function() {
         const line = document.querySelector('.draggable-line');
         const container = document.querySelector('.image-container');
-        let isDragging = false;
         
-        let isMouseDown = false;
+        let isDragActive = false;
         let hasMoved = false;
         
-        line.addEventListener('mousedown', function(e) {
-          isMouseDown = true;
+        // Common drag logic for both mouse and touch
+        function handleDragStart(clientY) {
+          isDragActive = true;
           hasMoved = false;
-          const startY = e.clientY;
+          const startY = clientY;
           const startLineTop = parseFloat(line.style.top) || 0;
-          e.preventDefault();
           
-          const handleMouseMove = function(moveEvent) {
-            if (!isMouseDown) return;
+          const updatePosition = function(moveClientY) {
+            if (!isDragActive) return;
             
-            const deltaY = moveEvent.clientY - startY;
+            const deltaY = moveClientY - startY;
             
             // Only start updating after significant movement
             if (Math.abs(deltaY) > 3) {
@@ -120,15 +121,40 @@
             }
           };
           
-          const handleMouseUp = function() {
-            isMouseDown = false;
+          const handleMouseMove = function(moveEvent) {
+            updatePosition(moveEvent.clientY);
+          };
+          
+          const handleTouchMove = function(moveEvent) {
+            moveEvent.preventDefault(); // Prevent scrolling
+            updatePosition(moveEvent.touches[0].clientY);
+          };
+          
+          const handleEnd = function() {
+            isDragActive = false;
             hasMoved = false;
             document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('mouseup', handleEnd);
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleEnd);
           };
           
           document.addEventListener('mousemove', handleMouseMove);
-          document.addEventListener('mouseup', handleMouseUp);
+          document.addEventListener('mouseup', handleEnd);
+          document.addEventListener('touchmove', handleTouchMove, { passive: false });
+          document.addEventListener('touchend', handleEnd);
+        }
+        
+        // Mouse events
+        line.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          handleDragStart(e.clientY);
+        });
+        
+        // Touch events
+        line.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          handleDragStart(e.touches[0].clientY);
         });
       });
     </script>
