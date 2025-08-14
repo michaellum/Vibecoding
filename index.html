@@ -2,12 +2,146 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Blank Page</title>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .image-container {
+        position: relative;
+        width: 400px;
+        height: 400px;
+      }
+      
+      .image-container img {
+        max-width: 100%;
+        height: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      
+      .happy {
+        z-index: 2;
+      }
+      
+      .sad {
+        z-index: 1;
+      }
+      
+      .reveal-mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0px;
+        background: transparent;
+        z-index: 3;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      
+      .reveal-mask .sad-reveal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        max-width: 100%;
+        height: auto;
+      }
+      
+      .draggable-line {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        width: 100%;
+        height: auto;
+        cursor: ns-resize;
+        z-index: 4;
+      }
+      
+      .draggable-line img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const line = document.querySelector('.draggable-line');
+        const container = document.querySelector('.image-container');
+        let isDragging = false;
+        
+        let isMouseDown = false;
+        let hasMoved = false;
+        
+        line.addEventListener('mousedown', function(e) {
+          isMouseDown = true;
+          hasMoved = false;
+          const startY = e.clientY;
+          const startLineTop = parseFloat(line.style.top) || 0;
+          e.preventDefault();
+          
+          const handleMouseMove = function(moveEvent) {
+            if (!isMouseDown) return;
+            
+            const deltaY = moveEvent.clientY - startY;
+            
+            // Only start updating after significant movement
+            if (Math.abs(deltaY) > 3) {
+              hasMoved = true;
+            }
+            
+            if (hasMoved) {
+              const img = container.querySelector('img');
+              const imgHeight = img ? img.offsetHeight : 400;
+              
+              // Calculate new position - stop at 50% of image height
+              const newLineTop = startLineTop + deltaY;
+              const maxY = imgHeight * 0.50;
+              const clampedY = Math.max(0, Math.min(newLineTop, maxY));
+              
+              // Update line position
+              line.style.top = clampedY + 'px';
+              
+              // Update reveal mask height to show sad image - center with crown
+              const revealMask = container.querySelector('.reveal-mask');
+              const crownImg = line.querySelector('img');
+              const crownHeight = crownImg ? crownImg.offsetHeight : 0;
+              const maskHeight = clampedY + (crownHeight / 2);
+              revealMask.style.height = maskHeight + 'px';
+            }
+          };
+          
+          const handleMouseUp = function() {
+            isMouseDown = false;
+            hasMoved = false;
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+          };
+          
+          document.addEventListener('mousemove', handleMouseMove);
+          document.addEventListener('mouseup', handleMouseUp);
+        });
+      });
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div class="image-container">
+      <img src="images/trio happy.png" alt="Trio Happy" class="happy">
+      <div class="reveal-mask">
+        <img src="images/trio sad.png" alt="Trio Sad" class="sad-reveal">
+      </div>
+      <div class="draggable-line">
+        <img src="images/trio crowns.png" alt="Trio Crowns">
+      </div>
+    </div>
   </body>
 </html>
